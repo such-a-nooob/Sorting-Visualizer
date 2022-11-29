@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Sort Visualizer</title>
+    <link rel="icon" href="favicon.ico" />
+    <link rel="stylesheet" href="styles.css"/>
+    <script src="index.js"></script>
+  </head>
+<body onload="updateBars()">
+    <header class="App-header">
+        <nav class="Navbar">
+            <div class="logo">
+                <img src="favicon.png" alt="logo"/>
+                <h3> SORTING VISUALIZER</h3>
+            </div>
+        </nav>
+        <div class="container">
+            <div class="main-bar">
+                <div class="bars-container" id="bars-container">
+                    <!--<div class="bar"></div>-->
+                </div>
+                <div class="details">
+                    <!--<div class="time-taken">
+                        <h4>Time : </h4>
+                        <h4 id="time-taken">0</h4>
+                        <h4 >sec</h4>
+                    </div>-->
+                    <div class="num-swap">
+                        <h4 id="swap-tag">Swaps : </h4>
+                        <h4 id="num-swap">0</h4>
+                    </div>
+                    <div class="num-comp">
+                        <h4>Comparisons : </h4>
+                        <h4 id="num-comp">0</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <h4>CONTROLS</h4>
+                    <hr/>
+                </div>
+                <div class="sidebar-content">
+                    <div class="siidebar-content-items">
+                        <h6>ALGORITHM</h6>
+                        <div style="margin-top: 20px;">
+                            <div class="dropdown toggle">
+                                <input id="t1" name="t1" type="checkbox">
+                                <label for="t1" id="algo-tag">Select Algorithm</label>
+                                <ul class="list">
+                                  <li style='background-color: "#323232"; height: 2px;'></li>
+                                  <li>
+                                    <input id="a1" value="Bubble" name="algo" type="radio" onclick="updateAlgo()">
+                                    <label for="a1">Bubble Sort</label>
+                                  </li>
+                                  <li>
+                                    <input id="a2" value="Selection" name="algo" type="radio" onclick="updateAlgo()">
+                                    <label for="a2">Selection Sort</label>
+                                  </li>
+                                  <li>
+                                    <input id="a3" value="Insertion" name="algo" type="radio" onclick="updateAlgo()">
+                                    <label for="a3">Insertion Sort</label>
+                                  </li>
+                                  <li>
+                                    <input id="a4" value="Quick" name="algo" type="radio" onclick="updateAlgo()">
+                                    <label for="a4">Quick Sort</label>
+                                  </li>
+                                  <li>
+                                    <input id="a5" value="Merge" name="algo" type="radio" onclick="updateAlgo()">
+                                    <label for="a5">Merge Sort</label>
+                                  </li>
+                                  <li style='background-color: "#323232"; height: 2px;'></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="slider-container">
+                            <h6>ARRAY SIZE</h6>
+                            <div class="slider">
+                                <input id="array-size" type="range" min="3" max="70" step="1" value="20" onchange="updateSize()"/>
+                                <span id="data-size">20</span>
+                            </div>
+                            <h6>SPEED</h6>
+                            <div class="slider">
+                                <input id="speed" type="range" min="0.5" max="4" step="0.5" value="1" onchange="updateSpeed()" />
+                                <span id="data-speed" class="data-speed">1</span><span class="data">x</span>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="buttons">
+                        <button class="sort" id="sort" onclick="sort()">Sort</button>
+                        <button class="new-array" id="new-array" onclick="updateBars()">Randomize</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="infobar">
+            <div class="infobar-title" width="100%">
+                <h4>INFORMATION</h4>
+                <hr/>
+            </div>
+            <div class="infobar-content">
+                <h6 id="algo-name">Select an algorithm</h6>
+                <p id="algo-desc"></p>
+                <h6>Time Complexity</h6>
+                <table class="comp">
+                    <tr>
+                        <td><h4>Worst case</h4></td>
+                        <td><p id="worst">O()</p></td>
+                    </tr>
+                    <tr>
+                        <td><h4>Average case</h4></td>
+                        <td><p id="average">O()</p></td>
+                    </tr>
+                    <tr>
+                        <td><h4>Best case</h4></td>
+                        <td><p id="best">O()</p></td>
+                    </tr>
+                </table>
+                <h6>Space Complexity</h6><p id="space"></p>
+            </div>
+        </div>
+    </header>
+    <footer>
+        <p>Created by : <b>Muneeba</b> and <b>Rehma</b></p>
+    </footer>
+</body>
+</html>
+

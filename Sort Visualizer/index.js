@@ -10,17 +10,22 @@ function updateSpeed() {
 }
 
 function randomNum(min, max) {
-    return (Math.floor(Math.random() * (max - min + 1)) + min);
+    return (Math.floor(Math.random() * (max - min+1))+min);
 }
 
 var nBars;
 var array;
+var tarray;
 var heightFactor;
 
 function createArray(n) {
     var a = new Array(n); 
+    tarray = new Array(n);
     for(let i=0; i<n; i++)
+    {
         a[i] = randomNum(5, 60);
+        tarray[i] = a[i]
+    }
     return a;
 }
 
@@ -31,15 +36,15 @@ function renderBars(array, nBars) {
         const bar = document.createElement("div");
         bar.innerHTML = array[i];
         if(nBars<25)
-            bar.style.fontSize = 10 + "px";
+            bar.style.fontSize = 10+"px";
         else if(nBars<35)
-            bar.style.fontSize = 3*100/nBars + "px";
+            bar.style.fontSize = 3*100/nBars+"px";
         else
         {
-            bar.style.fontSize = 2 + "px";
+            bar.style.fontSize = 2+"px";
             bar.style.color = '#383532';
         }
-        bar.style.height = array[i] * heightFactor + "px";
+        bar.style.height = array[i] * heightFactor+"px";
         bar.classList.add("bar");
         barContainer.appendChild(bar);
     }
@@ -52,6 +57,22 @@ function updateBars()
     document.getElementById("bars-container").innerHTML = " ";
     array = createArray(nBars);
     renderBars(array, nBars);
+    document.getElementById("num-comp").innerHTML = 0;
+    document.getElementById("num-swap").innerHTML = 0;
+}
+
+function reset()
+{
+    var bar = document.getElementsByClassName("bar")
+    for(var i=0; i<nBars; i++)
+        array[i] = tarray[i]
+    for(var i=0; i<nBars; i++)
+    {
+        bar[i].style.height = array[i] * heightFactor+"px"
+        bar[i].innerHTML = array[i]
+        bar[i].style.backgroundColor = '#383532'
+        bar[i].style.color = '#978b82'
+    }
     document.getElementById("num-comp").innerHTML = 0;
     document.getElementById("num-swap").innerHTML = 0;
 }
@@ -130,6 +151,7 @@ function updateAlgo() {
             document.getElementById('t1').checked = false;
             updateAlgoData(e[i].value);
             selectedAlgo = e[i].value;
+            reset();
         }
     }
 }
@@ -147,6 +169,8 @@ async function sort()
         await selection(array, nBars);
         break;
         case "Insertion":  
+        disableInput();
+        await insertion(array, nBars);
         break;
         case "Quick":  
         break;
@@ -184,19 +208,19 @@ async function bubble(a, n)
             await delay(speed)
             if(a[j] > a[j+1])
             {
+                //swap
                 swap.innerHTML = ++swaps
                 bar[j].style.backgroundColor = 'rgba(172, 215, 33, 0.23)' 
                 bar[j+1].style.backgroundColor = 'rgba(172, 215, 33, 0.23)'
                 await delay(speed)
-                //swap
                 var TEMP = bar[j].innerHTML
                 var temp = a[j]
                 bar[j].innerHTML = bar[j+1].innerHTML
-                a[j] = a[j + 1]
+                a[j] = a[j+1]
                 bar[j+1].innerHTML = TEMP
                 a[j+1] = temp
-                bar[j].style.height = a[j] * heightFactor + "px"
-                bar[j+1].style.height = a[j+1] * heightFactor + "px"      
+                bar[j].style.height = a[j] * heightFactor+"px"
+                bar[j+1].style.height = a[j+1] * heightFactor+"px"      
                 await delay(speed)          
             }
             bar[j].style.backgroundColor = '#383532'
@@ -217,6 +241,7 @@ async function selection(a,n)
     var speed = document.getElementById("speed").value
     var comp = document.getElementById("num-comp")
     var swap = document.getElementById("num-swap")
+    swap.innerHTML = "Swaps :"
     comparisons = 0
     swaps = 0
 
@@ -253,8 +278,8 @@ async function selection(a,n)
             a[min] = a[i]
             bar[i].innerHTML = TEMP
             a[i] = temp
-            bar[min].style.height = a[min] * heightFactor + "px"
-            bar[i].style.height = a[i] * heightFactor + "px"      
+            bar[min].style.height = a[min] * heightFactor+"px"
+            bar[i].style.height = a[i] * heightFactor+"px"      
             await delay(speed); 
             bar[min].style.backgroundColor = '#383532'
         }
@@ -265,15 +290,61 @@ async function selection(a,n)
     enableInput();
 }
 
-function linearSearch(num, comp)
+async function insertion(a,n) 
 {
-	let p=num;
-	for(var i=num-1; i>=0; i--)
-	{
-		if(a[num]<a[i]) p=i;
-		comp++;
-	}
-	return p;
+    var bar = document.getElementsByClassName("bar")
+    var speed = document.getElementById("speed").value
+    var comp = document.getElementById("num-comp")
+    var move = document.getElementById("num-swap")
+    comparisons = 0
+    moved = 0
+    
+    bar[0].style.backgroundColor = '#d79a21bb'
+    bar[0].style.color = '#383532'
+    for (var i=1; i<n; i++) 
+    {
+        bar[i].style.backgroundColor = "rgba(172, 215, 33, 0.23)";
+        await delay(speed)
+        var t = a[i]
+        comp.innerHTML = ++comparisons
+        for(var x=i-2; x>=0; x--) 
+        {
+            if(a[x]>t)
+                comp.innerHTML = ++comparisons
+            if(a[x-1]<t)
+            {
+                comp.innerHTML = ++comparisons
+                break
+            }
+        }
+
+        for(var j=i-1; j>=0 && a[j]>t; j--) 
+        {
+            bar[j+1].style.height = bar[j].style.height;
+            a[j+1] = a[j];
+            move.innerHTML = ++moved
+            bar[j+1].innerHTML = a[j+1] 
+            bar[j].style.backgroundColor = "rgba(172, 215, 33, 0.23)";
+            await delay(speed)
+          
+            for(var k=i; k>=0; k--)
+            {
+                bar[k].style.backgroundColor = '#d79a21bb'
+                bar[k].style.color = '#383532'
+            }
+        }
+
+        bar[j+1].style.backgroundColor = 'rgba(215, 154, 33, 0.23)'
+        await delay(speed)
+        a[j+1] = t
+        bar[j+1].style.height = t * heightFactor+"px"
+        bar[j+1].innerHTML = a[j+1] 
+        bar[j+1].style.backgroundColor = '#d79a21bb'
+        bar[j+1].style.color = '#383532'
+        await delay(speed)
+        bar[i].style.backgroundColor = '#d79a21bb'
+        bar[i].style.color = '#383532'
+        await delay(speed)
+    }
+    enableInput();
 }
-
-

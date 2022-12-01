@@ -122,7 +122,7 @@ function updateAlgoData( algo )
     else if(algo == "Quick")
     {
         document.getElementById('algo-name').innerHTML = algo+' Sort';
-        document.getElementById('algo-desc').innerHTML = '<a href="https://en.wikipedia.org/wiki/Quicksort">Quick Sort</a> is an efficient, in-place sorting algorith that in practice is faster than MergeSort and HeapSort. However, it is not a stable sorting algorithm, meaning that the relative positioning of equal sort items is not preserved.Quicksort is a divide and conquer algorithm. Quicksort first divides a large array varo two smaller sub-arrays: the low elements and the high elements. Quicksort can then recursively sort the sub-arrays. The steps are:</p><ol><li>Pick an element, called a pivot, from the array. This is usually done at random.</li><li>Move pivot element to the start of the array.</li><li><em>Partitioning:</em> reorder the array so that all elements with values less than the pivot come before the pivot, while all elements with values greater than the pivot come after it (equal values can go either way). After this partitioning, the pivot is in its final position. This is called the Quick Sort <em>partition</em> operation.</li><li>Recursively apply the above steps to the sub-array of elements with smaller values and separately to the sub-array ofelements with greater values.</li></ol><p>The base case of the recursion is an array of size zero or one, which are sorted by definition.</p>';
+        document.getElementById('algo-desc').innerHTML = '<a href="https://en.wikipedia.org/wiki/Quicksort">Quick Sort</a> is an efficient, in-place sorting algorith that in practice is faster than MergeSort and HeapSort. However, it is not a stable sorting algorithm, meaning that the relative positioning of equal sort items is not preserved.Quicksort is a divide and conquer algorithm. Quicksort first divides a large array varo two smaller sub-arrays: the beg elements and the end elements. Quicksort can then recursively sort the sub-arrays. The steps are:</p><ol><li>Pick an element, called a pivot, from the array. This is usually done at random.</li><li>swap pivot element to the start of the array.</li><li><em>Partitioning:</em> reorder the array so that all elements with values less than the pivot come before the pivot, while all elements with values greater than the pivot come after it (equal values can go either way). After this partitioning, the pivot is in its final position. This is called the Quick Sort <em>partition</em> operation.</li><li>Recursively apply the above steps to the sub-array of elements with smaller values and separately to the sub-array ofelements with greater values.</li></ol><p>The base case of the recursion is an array of size zero or one, which are sorted by definition.</p>';
         document.getElementById('worst').innerHTML = 'O(<em>n</em><sup>2</sup>)';
         document.getElementById('average').innerHTML = 'O(<em>n</em>log<em>n</em>)';
         document.getElementById('best').innerHTML = 'O(<em>n</em>log<em>n</em>)';
@@ -156,26 +156,43 @@ function updateAlgo() {
     }
 }
 
+var comparisons, swaps;
+var bar, speed, comp, swap;
+
 async function sort()
 {
+    bar = document.getElementsByClassName("bar")
+    speed = document.getElementById("speed").value
+    comp = document.getElementById("num-comp")
+    swap = document.getElementById("num-swap")
+    comparisons = 0
+    swaps = 0
+
     switch(selectedAlgo)
     {
         case "Bubble": 
-        disableInput();
-        await bubble(array, nBars);
-        break;
+            disableInput();
+            await bubble(array, nBars);
+            enableInput()
+            break;
         case "Selection":  
-        disableInput();
-        await selection(array, nBars);
-        break;
+            disableInput();
+            await selection(array, nBars);
+            enableInput()
+            break;
         case "Insertion":  
-        disableInput();
-        await insertion(array, nBars);
-        break;
+            disableInput();
+            await insertion(array, nBars);
+            enableInput()
+            break;
         case "Quick":  
-        break;
+            disableInput();
+            await quick(array, 0, nBars-1);
+            alert(array)
+            enableInput()
+            break;
         case "Merge":  
-        break;
+            break;
         default: alert("Select an algorithm!");
     }
 }
@@ -187,17 +204,8 @@ function delay(milisec) {
     })
 }
 
-var comparisons, swaps;
-
 async function bubble(a, n)
 {
-    var bar = document.getElementsByClassName("bar")
-    var speed = document.getElementById("speed").value
-    var comp = document.getElementById("num-comp")
-    var swap = document.getElementById("num-swap")
-    comparisons = 0
-    swaps = 0
-
     for(var i = 0; i < n; i++)
     {   
         for(var j = 0; j < ( n - i -1 ); j++)
@@ -231,20 +239,10 @@ async function bubble(a, n)
         bar[n-i-1].style.color = '#383532'
         //await delay(speed) 
     }
-    enableInput();
 }
 
 async function selection(a,n)
 {
-    
-    var bar = document.getElementsByClassName("bar")
-    var speed = document.getElementById("speed").value
-    var comp = document.getElementById("num-comp")
-    var swap = document.getElementById("num-swap")
-    swap.innerHTML = "Swaps :"
-    comparisons = 0
-    swaps = 0
-
     for (var i=0; i<n; i++) 
     {
         let min = i;
@@ -287,23 +285,15 @@ async function selection(a,n)
         bar[i].style.color = '#383532'
         await delay(speed)
     }
-    enableInput();
 }
 
 async function insertion(a,n) 
 {
-    var bar = document.getElementsByClassName("bar")
-    var speed = document.getElementById("speed").value
-    var comp = document.getElementById("num-comp")
-    var move = document.getElementById("num-swap")
-    comparisons = 0
-    moved = 0
-    
     bar[0].style.backgroundColor = '#d79a21bb'
     bar[0].style.color = '#383532'
     for (var i=1; i<n; i++) 
     {
-        bar[i].style.backgroundColor = "rgba(172, 215, 33, 0.23)";
+        bar[i].style.backgroundColor = "rgba(215, 154, 33, 0.23)";
         await delay(speed)
         var t = a[i]
         comp.innerHTML = ++comparisons
@@ -322,10 +312,8 @@ async function insertion(a,n)
         {
             bar[j+1].style.height = bar[j].style.height;
             a[j+1] = a[j];
-            move.innerHTML = ++moved
+            swap.innerHTML = ++swaps
             bar[j+1].innerHTML = a[j+1] 
-            bar[j].style.backgroundColor = "rgba(172, 215, 33, 0.23)";
-            await delay(speed)
           
             for(var k=i; k>=0; k--)
             {
@@ -334,7 +322,7 @@ async function insertion(a,n)
             }
         }
 
-        bar[j+1].style.backgroundColor = 'rgba(215, 154, 33, 0.23)'
+        bar[j+1].style.backgroundColor = 'rgba(172, 215, 33, 0.23)'
         await delay(speed)
         a[j+1] = t
         bar[j+1].style.height = t * heightFactor+"px"
@@ -346,5 +334,4 @@ async function insertion(a,n)
         bar[i].style.color = '#383532'
         await delay(speed)
     }
-    enableInput();
 }

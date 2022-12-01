@@ -186,10 +186,7 @@ async function sort()
             enableInput()
             break;
         case "Quick":  
-            disableInput();
-            await quick(array, 0, nBars-1);
-            alert(array)
-            enableInput()
+            
             break;
         case "Merge":  
             break;

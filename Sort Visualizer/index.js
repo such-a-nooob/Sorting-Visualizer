@@ -1,23 +1,30 @@
+var nBars;  // Number of bars
+var array;  // Array to store the list of numbers
+var tarray; // to store the initial unsorted array 
+var heightFactor; // to define the height of the bars
+var selectedAlgo; // the Algorithm selected
+var comparisons, swaps; // to count the number of swaps/ elements moved/ subarrays merged and comparisons
+var bar, speed, comp, swap, tag;  // to access the HTML elements
+
+/* Update the size tag when the 'Array size' slider is moved and render the bars accordingly */
 function updateSize() {
   var x = document.getElementById("array-size").value;
   document.getElementById("data-size").innerHTML = x;
   updateBars();
 }
 
+/* Update the speed tag on moving the 'Speed' slider */
 function updateSpeed() {
   var x = document.getElementById("speed").value;
   document.getElementById("data-speed").innerHTML = x;
 }
 
+/* Genrate random number between 5 to 60 to store in the array */
 function randomNum(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-var nBars;
-var array;
-var tarray;
-var heightFactor;
-
+/* Create an array of the specified size initialized with randomly generated elements */
 function createArray(n) {
   var a = new Array(n);
   tarray = new Array(n);
@@ -28,6 +35,7 @@ function createArray(n) {
   return a;
 }
 
+/* Insert bars according to the array generated */
 function renderBars(array, nBars) {
   heightFactor = 4;
   for (var i = 0; i < nBars; i++) {
@@ -46,6 +54,7 @@ function renderBars(array, nBars) {
   }
 }
 
+/* Check the array size, create an array with random elements and render the bars according to the array created */
 function updateBars() {
   nBars = document.getElementById("array-size").value;
   array = new Array(nBars);
@@ -56,6 +65,7 @@ function updateBars() {
   document.getElementById("num-swap").innerHTML = 0;
 }
 
+/* Reset the sorted array to an unsorted one */
 function reset() {
   var bar = document.getElementsByClassName("bar");
   for (var i = 0; i < nBars; i++) array[i] = tarray[i];
@@ -75,6 +85,7 @@ function reset() {
   document.getElementById("num-swap").innerHTML = 0;
 }
 
+/* Enable the dropdown menus, sliders and buttons */
 function enableInput() {
   document
     .querySelectorAll("input")
@@ -84,6 +95,7 @@ function enableInput() {
     .forEach((element) => (element.disabled = false));
 }
 
+/* Disable the dropdown menus, sliders and buttons */
 function disableInput() {
   document
     .querySelectorAll("input")
@@ -93,52 +105,77 @@ function disableInput() {
     .forEach((element) => (element.disabled = true));
 }
 
-var selectedAlgo;
+/* Update the Information section according to the algorithm selected */
 function updateAlgoData(algo) {
+  var name = document.getElementById("algo-name");
+  var description = document.getElementById("algo-desc");
+  var cWorst = document.getElementById("worst");
+  var cAvg = document.getElementById("average");
+  var cBest = document.getElementById("best");
+  var cSpace = document.getElementById("space");
+  tag = document.getElementById("swap-tag");
+
   if (algo == "Bubble") {
-    document.getElementById("algo-name").innerHTML = algo + " Sort";
-    document.getElementById("algo-desc").innerHTML =
+
+    tag.innerHTML = "Swaps : ";
+    name.innerHTML = algo + " Sort";
+    description.innerHTML =
       '<a href="https://en.wikipedia.org/wiki/Bubble_sort">Bubble Sort</a> is a simple sorting algorithm that repeatedly steps through the list, compares adjacent elements and swaps them if they are in the wrong order.The pass through the list is repeated until the list is sorted. The algorithm, which is a comparison sort, is named for the way smaller or larger elements "bubble" to the top of the list. Although the algorithm is simple, it is too slow and impractical for most problems.';
-    document.getElementById("worst").innerHTML = "O(n<sup>2</sup>)";
-    document.getElementById("average").innerHTML = "O(n<sup>2</sup>)";
-    document.getElementById("best").innerHTML = "O(n)";
-    document.getElementById("space").innerHTML = "O(1)";
+    cWorst.innerHTML = "O(n<sup>2</sup>)";
+    cAvg.innerHTML = "O(n<sup>2</sup>)";
+    cBest.innerHTML = "O(n)";
+    cSpace.innerHTML = "O(1)";
+
   } else if (algo == "Selection") {
-    document.getElementById("algo-name").innerHTML = algo + " Sort";
-    document.getElementById("algo-desc").innerHTML =
+
+    tag.innerHTML = "Swaps : ";
+    name.innerHTML = algo + " Sort";
+    description.innerHTML =
       '<a href="https://en.wikipedia.org/wiki/Selection_sort">Selection Sort</a> is an in-place comparison sorting algorithm that divides the input list varo two parts: the sublist of items already sorted, which is built up from left to right at the front (left) of the list, and the sublist of items remaining to be sorted that occupy the rest of the list. Initially, the sorted sublist is empty and the unsorted sublist is the entire input list. The algorithm proceeds by finding the smallest element in the unsorted sublist, exchanging (swapping) it with the leftmost unsorted element (putting it in sorted order), and moving the sublist boundaries one element to the right.';
-    document.getElementById("worst").innerHTML = "O(n<sup>2</sup>)";
-    document.getElementById("average").innerHTML = "O(n<sup>2</sup>)";
-    document.getElementById("best").innerHTML = "O(n<sup>2</sup>)";
-    document.getElementById("space").innerHTML = "O(1)";
+    cWorst.innerHTML = "O(n<sup>2</sup>)";
+    cAvg.innerHTML = "O(n<sup>2</sup>)";
+    cBest.innerHTML = "O(n<sup>2</sup>)";
+    cSpace.innerHTML = "O(1)";
+
   } else if (algo == "Merge") {
-    document.getElementById("algo-name").innerHTML = algo + " Sort";
-    document.getElementById("algo-desc").innerHTML =
+
+    tag.innerHTML = "Subarrays Merged : ";
+    name.innerHTML = algo + " Sort";
+    description.innerHTML =
       '<a href="https://en.wikipedia.org/wiki/Merge_sort">Merge Sort</a> is an efficient, stable sorting algorith that makes use of the divide and conquer strategy. Conceptually the algorithm works as follows : <ol><li>Divide the unsorted list varo <em>n</em> sublists, each containing one element(a list of one element is considered sorted)</li><li>Repeatedly merge sublists to produce new sorted sublists until there is only one sublist remaining. This will be the sorted list.</li></ol></div>';
-    document.getElementById("worst").innerHTML = "O(<em>n</em> log <em>n</em>)";
-    document.getElementById("average").innerHTML =
-      "O(<em>n</em> log <em>n</em>)";
-    document.getElementById("best").innerHTML = "O(<em>n</em> log <em>n</em>)";
-    document.getElementById("space").innerHTML = "O(<em>n</em>)";
+    cWorst.innerHTML = "O(<em>n</em> log <em>n</em>)";
+    cAvg.innerHTML = "O(<em>n</em> log <em>n</em>)";
+    cBest.innerHTML = "O(<em>n</em> log <em>n</em>)";
+    cSpace.innerHTML = "O(<em>n</em>)";
+
   } else if (algo == "Quick") {
-    document.getElementById("algo-name").innerHTML = algo + " Sort";
-    document.getElementById("algo-desc").innerHTML =
+
+    tag.innerHTML = "Swaps : ";
+    name.innerHTML = algo + " Sort";
+    description.innerHTML =
       '<a href="https://en.wikipedia.org/wiki/Quicksort">Quick Sort</a> is an efficient, in-place sorting algorith that in practice is faster than MergeSort and HeapSort. However, it is not a stable sorting algorithm, meaning that the relative positioning of equal sort items is not preserved.Quicksort is a divide and conquer algorithm. Quicksort first divides a large array varo two smaller sub-arrays: the beg elements and the end elements. Quicksort can then recursively sort the sub-arrays. The steps are:</p><ol><li>Pick an element, called a pivot, from the array. This is usually done at random.</li><li>swap pivot element to the start of the array.</li><li><em>Partitioning:</em> reorder the array so that all elements with values less than the pivot come before the pivot, while all elements with values greater than the pivot come after it (equal values can go either way). After this partitioning, the pivot is in its final position. This is called the Quick Sort <em>partition</em> operation.</li><li>Recursively apply the above steps to the sub-array of elements with smaller values and separately to the sub-array ofelements with greater values.</li></ol><p>The base case of the recursion is an array of size zero or one, which are sorted by definition.</p>';
-    document.getElementById("worst").innerHTML = "O(<em>n</em><sup>2</sup>)";
-    document.getElementById("average").innerHTML = "O(<em>n</em>log<em>n</em>)";
-    document.getElementById("best").innerHTML = "O(<em>n</em>log<em>n</em>)";
-    document.getElementById("space").innerHTML = "O(log<em>n</em>)";
+    cWorst.innerHTML = "O(<em>n</em><sup>2</sup>)";
+    cAvg.innerHTML = "O(<em>n</em>log<em>n</em>)";
+    cBest.innerHTML = "O(<em>n</em>log<em>n</em>)";
+    cSpace.innerHTML = "O(log<em>n</em>)";
+
   } else if (algo == "Insertion") {
-    document.getElementById("algo-name").innerHTML = algo + " Sort";
-    document.getElementById("algo-desc").innerHTML =
+
+    tag.innerHTML = "Elements Moved : ";
+    name.innerHTML = algo + " Sort";
+    description.innerHTML =
       '<a href="https://en.wikipedia.org/wiki/Insertion_sort">Insertion Sort</a> is a simple sorting algorithm that iterates through an array and at each iteration it removes one element from the array, finds the location it belongs to in the sorted list and inserts it there, repeating until no elements remain in the unsorted list. It is an in-place, stable sorting algorithm that is inefficient on large input arrays but works well for data sets that are almost sorted. It is more efficient in practice compared to other quadratic sorting algorithms like bubble sort and selection sort.';
-    document.getElementById("worst").innerHTML = "O(n<sup>2</sup>)";
-    document.getElementById("average").innerHTML = "O(n<sup>2</sup>)";
-    document.getElementById("best").innerHTML = "O(n)";
-    document.getElementById("space").innerHTML = "O(1)";
+    cWorst.innerHTML = "O(n<sup>2</sup>)";
+    cAvg.innerHTML = "O(n<sup>2</sup>)";
+    cBest.innerHTML = "O(n)";
+    cSpace.innerHTML = "O(1)";
   }
 }
 
+/* Once an Algorithm is selected from the dropdown
+    Change the dropdown tag
+    Update the information section
+    Reset the bars if already sorted */
 function updateAlgo() {
   var e = document.getElementsByName("algo");
 
@@ -155,22 +192,22 @@ function updateAlgo() {
   }
 }
 
-var comparisons, swaps;
-var bar, speed, comp, swap;
-var itmd = [],
-  visited = [];
-function initialize() {
+/* Merge sort helper function */
+var itmd = [], visited = [];
+function initializeMSort() {
   for (var i = 0; i < nBars; i++) {
     itmd.push(0);
     visited.push(0);
   }
 }
 
+/* Run the appropiate algorithm once the start button os clicked */
 async function sort() {
   bar = document.getElementsByClassName("bar");
   speed = document.getElementById("speed").value;
   comp = document.getElementById("num-comp");
   swap = document.getElementById("num-swap");
+
   comparisons = 0;
   swaps = 0;
 
@@ -193,7 +230,7 @@ async function sort() {
     case "Quick":
       disableInput();
       await quick(array, 0, nBars - 1);
-      await delay(speed)
+      await delay(speed);
       for (let i = 0; i < nBars; i++) {
         bar[i].style.backgroundColor = "#d79a21bb";
         bar[i].style.color = "#383532";
@@ -202,7 +239,8 @@ async function sort() {
       break;
     case "Merge":
       disableInput();
-      initialize();
+      initializeMSort();
+
       for (let i = 0; i < nBars; i++) {
         bar[i].style.backgroundColor = "#383532";
         bar[i].style.color = "#978b82";
@@ -219,6 +257,7 @@ async function sort() {
   }
 }
 
+/* Provide a delay according to the speed in the speed slider */
 function delay(milisec) {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -226,6 +265,9 @@ function delay(milisec) {
     }, 80 * (8 - 2 * milisec));
   });
 }
+
+
+/* -----SORTING ALGORITHMS----- */
 
 async function bubble(a, n) {
   for (var i = 0; i < n; i++) {
@@ -256,7 +298,6 @@ async function bubble(a, n) {
     }
     bar[n - i - 1].style.backgroundColor = "#d79a21bb";
     bar[n - i - 1].style.color = "#383532";
-    //await delay(speed)
   }
 }
 
@@ -439,10 +480,11 @@ function mergeArray(arr, start, end) {
     end2 = end;
 
   let index = start;
+  swap.innerHTML = ++swaps;
 
   while (start1 <= end1 && start2 <= end2) {
+    comp.innerHTML = ++comparisons;
     if (arr[start1] <= arr[start2]) {
-      comp.innerHTML = ++comparisons;
       itmd[index] = arr[start1];
       index = index + 1;
       start1 = start1 + 1;
@@ -454,14 +496,12 @@ function mergeArray(arr, start, end) {
   }
 
   while (start1 <= end1) {
-    //swap.innerHTML = ++swaps;
     itmd[index] = arr[start1];
     index = index + 1;
     start1 = start1 + 1;
   }
 
   while (start2 <= end2) {
-    //swap.innerHTML = ++swaps;
     itmd[index] = arr[start2];
     index = index + 1;
     start2 = start2 + 1;
@@ -469,7 +509,6 @@ function mergeArray(arr, start, end) {
 
   index = start;
   while (index <= end) {
-    //swap.innerHTML = ++swaps;
     arr[index] = itmd[index];
     index++;
   }
